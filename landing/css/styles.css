@@ -223,6 +223,8 @@ section { position: relative; }
   flex: none;
 }
 .brand .seal svg { width: 15px; height: 15px; }
+.brand .seal .brand-icon { width: 17px; height: 17px; object-fit: contain; filter: invert(1) brightness(2); }
+[data-theme="dark"] .brand .seal .brand-icon { filter: none; }
 .nav-links { display: flex; align-items: center; gap: 4px; }
 .nav-links a {
   font-size: 0.88rem;
