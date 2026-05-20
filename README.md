@@ -39,9 +39,23 @@ launches when the build finishes.
 | `./install.sh --system` | Install to `/Applications` (prompts for `sudo`) |
 | `./install.sh --prefix DIR` | Install into a custom directory |
 | `./install.sh --no-open` | Don't launch the app after installing |
+| `./install.sh --replace-others` | Remove copies in other locations without asking |
+| `./install.sh --keep-others` | Leave copies in other locations in place |
 
 `install.sh` is safe to re-run — it cleanly replaces any previous copy, so it
 doubles as the upgrade path.
+
+### No accidental duplicates
+
+Before installing, the script checks the common locations (`~/Applications`,
+`/Applications`) and anywhere it has installed before for an existing
+`Acknowledgement Force.app` outside the current target. If it finds one — e.g.
+you ran the default once and `--system` later — it offers to remove the stray
+copy so you don't accumulate duplicates. In an interactive shell it asks;
+otherwise pass `--replace-others` or `--keep-others` to decide up front.
+
+Note that even if duplicate bundles exist on disk, the app enforces a
+single-instance lock at runtime, so only one copy can ever actually run.
 
 > The app is **ad-hoc signed** for local use. It is not notarized, so if you
 > move the `.app` to another Mac, Gatekeeper may warn you. Building from source

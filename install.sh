@@ -7,6 +7,13 @@
 #   ./install.sh --system        Install to /Applications (asks for sudo)
 #   ./install.sh --prefix DIR    Install into a custom directory
 #   ./install.sh --no-open       Don't launch the app after installing
+#   ./install.sh --replace-others  Remove copies in other locations, no prompt
+#   ./install.sh --keep-others   Leave copies in other locations in place
+#
+# Before installing, the script checks the common install locations (and any
+# it has installed to before) for an existing "Acknowledgement Force.app"
+# outside the current target and offers to remove it, so you don't end up with
+# stale duplicate copies on disk.
 #
 # After install the app lives at <prefix>/Acknowledgement Force.app. Turn on
 # auto-launch from the app's onboarding/Settings, or run ./uninstall.sh to
@@ -26,16 +33,25 @@ ICON_SRC="$REPO_DIR/landing/assets/raw/icon.png"
 PREFIX="$HOME/Applications"
 OPEN_AFTER=1
 USE_SUDO=""
+REPLACE_OTHERS=0
+KEEP_OTHERS=0
+RECORD="$HOME/Library/Application Support/$EXEC_NAME/install-locations"
 
 while [ $# -gt 0 ]; do
   case "$1" in
     --system) PREFIX="/Applications"; shift ;;
     --prefix) PREFIX="$2"; shift 2 ;;
     --no-open) OPEN_AFTER=0; shift ;;
+    --replace-others) REPLACE_OTHERS=1; shift ;;
+    --keep-others) KEEP_OTHERS=1; shift ;;
     -h|--help) grep '^#' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
     *) echo "Unknown option: $1" >&2; exit 2 ;;
   esac
 done
+
+# Normalize to an absolute path so duplicate detection and the sudo check below
+# compare apples to apples.
+case "$PREFIX" in /*) ;; *) PREFIX="$PWD/$PREFIX" ;; esac
 
 if [ "$(uname -s)" != "Darwin" ]; then
   echo "Error: Acknowledgement Force is a macOS app and only installs on macOS." >&2
@@ -116,13 +132,69 @@ if command -v codesign >/dev/null 2>&1; then
     echo "    (warning: ad-hoc code signing failed; app should still run)"
 fi
 
+DEST="$PREFIX/$APP_NAME.app"
+
+# Look for copies installed somewhere other than the current target so a user
+# who once ran `--system` and later the default (or vice versa) doesn't leave a
+# stale duplicate behind. Scan the common locations plus anywhere we've
+# installed before.
+SCAN_DIRS=("$HOME/Applications" "/Applications")
+if [ -f "$RECORD" ]; then
+  while IFS= read -r line; do [ -n "$line" ] && SCAN_DIRS+=("$line"); done < "$RECORD"
+fi
+
+abs_app() {  # echoes the physical path of "<dir>/<APP_NAME>.app" if <dir> exists
+  local dir="$1"
+  [ -d "$dir" ] || { echo "$dir/$APP_NAME.app"; return; }
+  echo "$(cd "$dir" && pwd -P)/$APP_NAME.app"
+}
+DEST_PHYS="$(abs_app "$PREFIX")"
+
+STRAYS=()
+for dir in "${SCAN_DIRS[@]}"; do
+  cand="$dir/$APP_NAME.app"
+  [ -d "$cand" ] || continue
+  cphys="$(abs_app "$dir")"
+  [ "$cphys" = "$DEST_PHYS" ] && continue
+  case " ${STRAYS[*]-} " in *" $cphys "*) continue ;; esac
+  STRAYS+=("$cphys")
+done
+
+if [ "${#STRAYS[@]}" -gt 0 ]; then
+  echo "==> Found Acknowledgement Force installed in other location(s):"
+  for s in "${STRAYS[@]}"; do echo "      $s"; done
+  remove=0
+  if [ "$KEEP_OTHERS" -eq 1 ]; then
+    echo "    Keeping them (--keep-others)."
+  elif [ "$REPLACE_OTHERS" -eq 1 ]; then
+    remove=1
+  elif [ -t 0 ]; then
+    printf "    Remove these before installing to %s? [y/N] " "$PREFIX"
+    read -r ans
+    case "$ans" in [yY]*) remove=1 ;; esac
+  else
+    echo "    Non-interactive run — leaving them. Re-run with --replace-others to remove."
+  fi
+  if [ "$remove" -eq 1 ]; then
+    for s in "${STRAYS[@]}"; do
+      if [ -w "$(dirname "$s")" ]; then rm -rf "$s"; else sudo rm -rf "$s"; fi
+      echo "    removed $s"
+    done
+  fi
+fi
+
 echo "==> Installing to $PREFIX..."
 $USE_SUDO mkdir -p "$PREFIX"
-DEST="$PREFIX/$APP_NAME.app"
 # If a previous copy is running, ask it to quit so we can replace it.
 osascript -e "tell application \"$APP_NAME\" to quit" >/dev/null 2>&1 || true
 $USE_SUDO rm -rf "$DEST"
 $USE_SUDO cp -R "$APP" "$DEST"
+
+# Remember where we installed so future runs can find duplicates here too.
+mkdir -p "$(dirname "$RECORD")"
+if ! { [ -f "$RECORD" ] && grep -qxF "$PREFIX" "$RECORD"; }; then
+  echo "$PREFIX" >> "$RECORD"
+fi
 
 echo ""
 echo "Installed: $DEST"
