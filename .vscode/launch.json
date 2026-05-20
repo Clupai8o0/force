@@ -1,0 +1,24 @@
+{
+  "configurations": [
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:force}",
+      "name": "Debug Force",
+      "target": "Force",
+      "configuration": "debug",
+      "preLaunchTask": "swift: Build Debug Force"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:force}",
+      "name": "Release Force",
+      "target": "Force",
+      "configuration": "release",
+      "preLaunchTask": "swift: Build Release Force"
+    }
+  ]
+}

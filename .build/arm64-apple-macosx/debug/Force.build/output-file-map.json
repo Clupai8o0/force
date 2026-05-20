@@ -1,0 +1,117 @@
+{
+  "": {
+    "swift-dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/primary.swiftdeps"
+  },
+  "/Users/clupa/Documents/projects/force/Sources/Force/App.swift": {
+    "dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/App.d",
+    "object": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/App.swift.o",
+    "swiftmodule": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/App~partial.swiftmodule",
+    "swift-dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/App.swiftdeps",
+    "diagnostics": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/App.dia"
+  },
+  "/Users/clupa/Documents/projects/force/Sources/Force/AppView.swift": {
+    "dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/AppView.d",
+    "object": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/AppView.swift.o",
+    "swiftmodule": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/AppView~partial.swiftmodule",
+    "swift-dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/AppView.swiftdeps",
+    "diagnostics": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/AppView.dia"
+  },
+  "/Users/clupa/Documents/projects/force/Sources/Force/ContractContent.swift": {
+    "dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/ContractContent.d",
+    "object": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/ContractContent.swift.o",
+    "swiftmodule": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/ContractContent~partial.swiftmodule",
+    "swift-dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/ContractContent.swiftdeps",
+    "diagnostics": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/ContractContent.dia"
+  },
+  "/Users/clupa/Documents/projects/force/Sources/Force/ContractView.swift": {
+    "dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/ContractView.d",
+    "object": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/ContractView.swift.o",
+    "swiftmodule": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/ContractView~partial.swiftmodule",
+    "swift-dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/ContractView.swiftdeps",
+    "diagnostics": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/ContractView.dia"
+  },
+  "/Users/clupa/Documents/projects/force/Sources/Force/DesignSystem.swift": {
+    "dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/DesignSystem.d",
+    "object": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/DesignSystem.swift.o",
+    "swiftmodule": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/DesignSystem~partial.swiftmodule",
+    "swift-dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/DesignSystem.swiftdeps",
+    "diagnostics": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/DesignSystem.dia"
+  },
+  "/Users/clupa/Documents/projects/force/Sources/Force/Fonts.swift": {
+    "dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/Fonts.d",
+    "object": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/Fonts.swift.o",
+    "swiftmodule": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/Fonts~partial.swiftmodule",
+    "swift-dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/Fonts.swiftdeps",
+    "diagnostics": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/Fonts.dia"
+  },
+  "/Users/clupa/Documents/projects/force/Sources/Force/HistoryView.swift": {
+    "dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/HistoryView.d",
+    "object": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/HistoryView.swift.o",
+    "swiftmodule": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/HistoryView~partial.swiftmodule",
+    "swift-dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/HistoryView.swiftdeps",
+    "diagnostics": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/HistoryView.dia"
+  },
+  "/Users/clupa/Documents/projects/force/Sources/Force/InlineText.swift": {
+    "dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/InlineText.d",
+    "object": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/InlineText.swift.o",
+    "swiftmodule": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/InlineText~partial.swiftmodule",
+    "swift-dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/InlineText.swiftdeps",
+    "diagnostics": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/InlineText.dia"
+  },
+  "/Users/clupa/Documents/projects/force/Sources/Force/OnboardingView.swift": {
+    "dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/OnboardingView.d",
+    "object": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/OnboardingView.swift.o",
+    "swiftmodule": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/OnboardingView~partial.swiftmodule",
+    "swift-dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/OnboardingView.swiftdeps",
+    "diagnostics": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/OnboardingView.dia"
+  },
+  "/Users/clupa/Documents/projects/force/Sources/Force/RootView.swift": {
+    "dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/RootView.d",
+    "object": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/RootView.swift.o",
+    "swiftmodule": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/RootView~partial.swiftmodule",
+    "swift-dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/RootView.swiftdeps",
+    "diagnostics": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/RootView.dia"
+  },
+  "/Users/clupa/Documents/projects/force/Sources/Force/Settings.swift": {
+    "dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/Settings.d",
+    "object": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/Settings.swift.o",
+    "swiftmodule": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/Settings~partial.swiftmodule",
+    "swift-dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/Settings.swiftdeps",
+    "diagnostics": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/Settings.dia"
+  },
+  "/Users/clupa/Documents/projects/force/Sources/Force/SettingsView.swift": {
+    "dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/SettingsView.d",
+    "object": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/SettingsView.swift.o",
+    "swiftmodule": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/SettingsView~partial.swiftmodule",
+    "swift-dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/SettingsView.swiftdeps",
+    "diagnostics": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/SettingsView.dia"
+  },
+  "/Users/clupa/Documents/projects/force/Sources/Force/SingleInstance.swift": {
+    "dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/SingleInstance.d",
+    "object": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/SingleInstance.swift.o",
+    "swiftmodule": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/SingleInstance~partial.swiftmodule",
+    "swift-dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/SingleInstance.swiftdeps",
+    "diagnostics": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/SingleInstance.dia"
+  },
+  "/Users/clupa/Documents/projects/force/Sources/Force/Store.swift": {
+    "dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/Store.d",
+    "object": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/Store.swift.o",
+    "swiftmodule": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/Store~partial.swiftmodule",
+    "swift-dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/Store.swiftdeps",
+    "diagnostics": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/Store.dia"
+  },
+  "/Users/clupa/Documents/projects/force/Sources/Force/Theme.swift": {
+    "dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/Theme.d",
+    "object": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/Theme.swift.o",
+    "swiftmodule": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/Theme~partial.swiftmodule",
+    "swift-dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/Theme.swiftdeps",
+    "diagnostics": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/Theme.dia"
+  },
+  "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/DerivedSources/resource_bundle_accessor.swift": {
+    "dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/resource_bundle_accessor.d",
+    "object": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/resource_bundle_accessor.swift.o",
+    "swiftmodule": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/resource_bundle_accessor~partial.swiftmodule",
+    "swift-dependencies": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/resource_bundle_accessor.swiftdeps",
+    "diagnostics": "/Users/clupa/Documents/projects/force/.build/arm64-apple-macosx/debug/Force.build/resource_bundle_accessor.dia"
+  }
+}
