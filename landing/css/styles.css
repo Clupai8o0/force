@@ -405,6 +405,12 @@ section { position: relative; }
 
 /* ---- Video demo ------------------------------------------ */
 .demo .window { max-width: 940px; margin-inline: auto; }
+.demo-video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: var(--container);
+}
 .video-slot {
   position: relative;
   aspect-ratio: 16 / 9;
