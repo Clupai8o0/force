@@ -128,7 +128,7 @@ PLIST
 # Ad-hoc sign so Gatekeeper trusts the locally built bundle and the launchd
 # agent gets a stable executable path. Non-fatal if codesign is unavailable.
 if command -v codesign >/dev/null 2>&1; then
-  codesign --force --deep --sign - "$APP" >/dev/null 2>&1 || \
+  codesign --force --deep --sign - --options runtime "$APP" >/dev/null 2>&1 || \
     echo "    (warning: ad-hoc code signing failed; app should still run)"
 fi
 
