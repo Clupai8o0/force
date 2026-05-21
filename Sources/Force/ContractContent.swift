@@ -13,6 +13,7 @@ enum ContractBlock: Identifiable {
     case numbered(Int, [Inline])
     case bullet([Inline])
     case checkbox([Inline])
+    case blockquote([Inline])
 
     var id: String { UUID().uuidString }
 }
@@ -26,8 +27,9 @@ enum Contract {
     /// Parses editable Markdown into renderable blocks.
     ///
     /// Supported line forms:
-    ///   `# / ## / ###` headings · `---` rule · `1.` numbered · `- ` bullet ·
-    ///   `[ ]` checkbox · `**bold**` inline · everything else is a paragraph.
+    ///   `# / ## / ###` headings · `---`/`***`/`___` rule · `1.` numbered ·
+    ///   `- `/`* ` bullet · `[ ]`/`- [ ]`/`- [x]` checkbox · `> ` blockquote ·
+    ///   `**bold**` inline · everything else is a paragraph.
     static func blocks(from markdown: String, date: String) -> [ContractBlock] {
         let text = markdown.replacingOccurrences(of: "{{DATE}}", with: date)
         var blocks: [ContractBlock] = []
@@ -36,14 +38,19 @@ enum Contract {
             let line = raw.trimmingCharacters(in: .whitespaces)
             if line.isEmpty { continue }
 
-            if line == "---" { blocks.append(.rule); continue }
+            if line == "---" || line == "***" || line == "___" { blocks.append(.rule); continue }
             if line.hasPrefix("### ") { blocks.append(.h3(String(line.dropFirst(4)))); continue }
             if line.hasPrefix("## ")  { blocks.append(.h2(String(line.dropFirst(3)))); continue }
             if line.hasPrefix("# ")   { blocks.append(.h1(String(line.dropFirst(2)))); continue }
 
-            if line.hasPrefix("[ ] ") { blocks.append(.checkbox(parseInline(String(line.dropFirst(4))))); continue }
-            if line.hasPrefix("[] ")  { blocks.append(.checkbox(parseInline(String(line.dropFirst(3))))); continue }
-            if line.hasPrefix("- ")   { blocks.append(.bullet(parseInline(String(line.dropFirst(2))))); continue }
+            // Checkbox — bare `[ ]` or task-list `- [ ]` / `* [x]`.
+            if let body = checkboxBody(line) { blocks.append(.checkbox(parseInline(body))); continue }
+
+            if line.hasPrefix("> ") { blocks.append(.blockquote(parseInline(String(line.dropFirst(2))))); continue }
+            if line == ">" { blocks.append(.blockquote([.plain("")])); continue }
+
+            if line.hasPrefix("- ") { blocks.append(.bullet(parseInline(String(line.dropFirst(2))))); continue }
+            if line.hasPrefix("* ") { blocks.append(.bullet(parseInline(String(line.dropFirst(2))))); continue }
 
             if let (n, rest) = numberedPrefix(line) {
                 blocks.append(.numbered(n, parseInline(rest)))
@@ -53,6 +60,17 @@ enum Contract {
             blocks.append(.paragraph(parseInline(line)))
         }
         return blocks
+    }
+
+    /// Extracts the label from a checkbox line, accepting an optional `- `/`* `
+    /// list marker followed by `[ ]`, `[]`, or `[x]`. Returns nil if not a checkbox.
+    private static func checkboxBody(_ line: String) -> String? {
+        var s = Substring(line)
+        if s.hasPrefix("- ") || s.hasPrefix("* ") { s = s.dropFirst(2) }
+        for marker in ["[ ] ", "[] ", "[x] ", "[X] "] where s.hasPrefix(marker) {
+            return String(s.dropFirst(marker.count))
+        }
+        return nil
     }
 
     /// Detects a leading `N. ` ordered-list marker.

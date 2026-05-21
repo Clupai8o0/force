@@ -150,6 +150,13 @@ struct ContractView: View {
                     .padding(.top, 3)
                 inlineText(runs).lineSpacing(4)
             }
+        case .blockquote(let runs):
+            HStack(alignment: .top, spacing: Space.md) {
+                RoundedRectangle(cornerRadius: 1)
+                    .fill(Ink.hairline)
+                    .frame(width: 3)
+                inlineText(runs, color: Ink.mute).lineSpacing(5)
+            }
         }
     }
 

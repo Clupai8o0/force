@@ -7,6 +7,7 @@ and native to macOS.
 
 ![macOS](https://img.shields.io/badge/macOS-14%2B-black)
 ![Swift](https://img.shields.io/badge/Swift-6-orange)
+![License](https://img.shields.io/badge/License-MIT-blue)
 
 ---
 
@@ -141,4 +142,9 @@ The version in `VERSION` is baked into the `.app` bundle's
 
 ## License
 
-See repository for license details.
+Released under the [MIT License](LICENSE) — free to use, modify, and
+distribute.
+
+The bundled fonts are licensed separately under the
+[SIL Open Font License 1.1](https://openfontlicense.org): **Fraunces**
+(© The Fraunces Project Authors) and **Inter** (© The Inter Project Authors).

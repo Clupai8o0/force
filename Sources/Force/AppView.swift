@@ -248,6 +248,13 @@ struct AppView: View {
                     .padding(.top, 4)
                 inlineText(runs).lineSpacing(3)
             }
+        case .blockquote(let runs):
+            HStack(alignment: .top, spacing: Space.sm) {
+                RoundedRectangle(cornerRadius: 1)
+                    .fill(Ink.hairline)
+                    .frame(width: 2)
+                inlineText(runs, color: Ink.mute).lineSpacing(3)
+            }
         }
     }
 }
