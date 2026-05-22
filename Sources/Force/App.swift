@@ -7,6 +7,7 @@ struct ForceApp: App {
     @StateObject private var store = Store.shared
     @StateObject private var theme = ThemeManager.shared
     @StateObject private var settings = SettingsStore.shared
+    @StateObject private var remote = RemoteSync.shared
 
     init() { Fonts.register() }
 
@@ -16,6 +17,7 @@ struct ForceApp: App {
                 .environmentObject(store)
                 .environmentObject(theme)
                 .environmentObject(settings)
+                .environmentObject(remote)
                 .frame(minWidth: 1100, minHeight: 760)
                 .background(Ink.base)
         }

@@ -81,6 +81,7 @@ final class SettingsStore: ObservableObject {
         static let contractText = "af-contract-text-v1"
         static let nonNegotiables = "af-nonnegotiables-v1"
         static let onboarded = "af-onboarded-v1"
+        static let reflection = "af-reflection-v1"
     }
 
     @Published var frequency: Frequency {
@@ -103,7 +104,14 @@ final class SettingsStore: ObservableObject {
     }
 
     @Published var contractText: String {
-        didSet { defaults.set(contractText, forKey: Keys.contractText) }
+        didSet {
+            defaults.set(contractText, forKey: Keys.contractText)
+            RemoteSync.shared.markLocalEdit()
+        }
+    }
+
+    @Published var reflection: String {
+        didSet { defaults.set(reflection, forKey: Keys.reflection) }
     }
 
     @Published var nonNegotiables: [NonNegotiable] {
@@ -112,6 +120,7 @@ final class SettingsStore: ObservableObject {
                 defaults.set(data, forKey: Keys.nonNegotiables)
             }
             Store.shared.syncChecklist()
+            RemoteSync.shared.markLocalEdit()
         }
     }
 
@@ -125,6 +134,7 @@ final class SettingsStore: ObservableObject {
         hasOnboarded = defaults.bool(forKey: Keys.onboarded)
         motivation = defaults.string(forKey: Keys.motivation) ?? DefaultCopy.motivation
         contractText = defaults.string(forKey: Keys.contractText) ?? Contract.defaultMarkdown
+        reflection = defaults.string(forKey: Keys.reflection) ?? ""
         if let data = defaults.data(forKey: Keys.nonNegotiables),
            let decoded = try? JSONDecoder().decode([NonNegotiable].self, from: data) {
             nonNegotiables = decoded

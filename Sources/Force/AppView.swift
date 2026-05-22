@@ -172,6 +172,23 @@ struct AppView: View {
                 }
             }
 
+            // Reflection (from the web editor)
+            if !settings.reflection.trimmingCharacters(in: .whitespaces).isEmpty {
+                VStack(alignment: .leading, spacing: Space.sm) {
+                    Text("REFLECTION")
+                        .font(Type.captionSM)
+                        .tracking(1.0)
+                        .foregroundStyle(Ink.mute)
+                    Text(settings.reflection)
+                        .font(Type.bodyMD)
+                        .foregroundStyle(Ink.ash)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(Space.xl)
+                .background(Ink.containerLow, in: RoundedRectangle(cornerRadius: Radius.lg))
+            }
+
             // Motivation quote + daily contract
             if !settings.motivation.trimmingCharacters(in: .whitespaces).isEmpty {
                 VStack(alignment: .leading, spacing: Space.md) {

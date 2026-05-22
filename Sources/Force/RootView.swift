@@ -4,6 +4,7 @@ struct RootView: View {
     @EnvironmentObject var store: Store
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var settings: SettingsStore
+    @EnvironmentObject var remote: RemoteSync
     @Environment(\.colorScheme) private var colorScheme
     @State private var introDone = false
 
@@ -38,6 +39,7 @@ struct RootView: View {
         .animation(.easeInOut(duration: 0.6), value: settings.hasOnboarded)
         .animation(.easeInOut(duration: 0.7), value: introDone)
         .onChange(of: colorScheme) { _, _ in theme.refreshSystem() }
+        .task { await remote.launchSync() }
     }
 }
 

@@ -5,9 +5,26 @@ your own words: the window won't close until you've read today's contract,
 ticked the box, and named the one thing that matters most. Free, open source,
 and native to macOS.
 
+Optionally, sign in to **sync your contract, quotes, goals, and reflection**
+from a web editor — edit from anywhere and it lands on your Mac on launch.
+
 ![macOS](https://img.shields.io/badge/macOS-14%2B-black)
 ![Swift](https://img.shields.io/badge/Swift-6-orange)
 ![License](https://img.shields.io/badge/License-MIT-blue)
+
+---
+
+## Two ways to run it
+
+**Hosted (no setup).** Download the prebuilt app (see Releases), create an
+account at [force.clupai.com](https://force.clupai.com), and log in. It comes
+pre-connected to the hosted backend — edit your contract on the web and it syncs
+to your Mac. Best for non-technical users.
+
+**Open source (your backend, or none).** Build from source below. Run it fully
+local with no account, or point it at **your own Supabase project** so you own
+all your data. Same app, your infrastructure. See
+[Sync — edit from anywhere](#sync--edit-from-anywhere).
 
 ---
 
@@ -42,6 +59,7 @@ launches when the build finishes.
 | `./install.sh --no-open` | Don't launch the app after installing |
 | `./install.sh --replace-others` | Remove copies in other locations without asking |
 | `./install.sh --keep-others` | Leave copies in other locations in place |
+| `./install.sh --package` | Build a shareable `.zip` in `./dist` instead of installing |
 
 `install.sh` is safe to re-run — it cleanly replaces any previous copy, so it
 doubles as the upgrade path.
@@ -87,6 +105,57 @@ so Force resurfaces on your chosen cadence:
 Your acknowledgement history is stored locally at
 `~/Library/Application Support/Force/acknowledgements.log`.
 
+## Sync — edit from anywhere
+
+Force can pull your **contract, quotes, daily goals, and reflection** from a
+Supabase project and push contract/goal edits back — so you can edit on the web
+and have it land on your Mac, and vice versa (last edit wins). Acknowledgements,
+checklist ticks, and history always stay local to each device.
+
+There's no separate config to maintain: **Settings → 03 — SYNC**. If the build
+was pre-connected, you'll just see a login form; otherwise you enter a Supabase
+URL + key first.
+
+### Option A — use the hosted backend
+
+Sign up at [force.clupai.com](https://force.clupai.com), then in the app:
+**Settings → Sync → log in**. Prebuilt distributable builds are already wired to
+the hosted backend, so there are no keys to enter — just log in.
+
+### Option B — bring your own Supabase (open source)
+
+Own all your data by pointing the app at your own project:
+
+1. Create a project at [supabase.com](https://supabase.com).
+2. In the SQL editor, run `web/supabase/migrations/0001_init.sql` (creates the
+   `contents` table, row-level security, and a signup trigger). Safe to re-run.
+3. *(Optional)* Deploy the web editor in `web/` to Vercel — set **Root
+   Directory = `web`** and the env vars `NEXT_PUBLIC_SUPABASE_URL` +
+   `NEXT_PUBLIC_SUPABASE_ANON_KEY`. Or run it locally with `cd web && pnpm dev`.
+4. In the app: **Settings → Sync** → paste your **Project URL** + **anon /
+   publishable** key → log in.
+
+The key you enter is the **public** key (anon / publishable), protected by
+row-level security — never the `service_role` secret.
+
+### Building a pre-connected distributable
+
+To hand someone a build that's already wired to *your* Supabase (they only log
+in or sign up — no keys), bake the credentials at build time:
+
+```sh
+FORCE_SUPABASE_URL=https://YOUR-REF.supabase.co \
+FORCE_SUPABASE_ANON_KEY=sb_publishable_... \
+./install.sh --package
+```
+
+This embeds the keys, restores the placeholder afterward (**keys never touch
+git**), and writes `dist/Acknowledgement-Force-<version>.zip`. The recipient
+unzips and drags the app to `Applications`. Because the build is ad-hoc signed
+(not notarized), on first open they right-click the app and choose **Open** (or
+run `xattr -dr com.apple.quarantine "<app>"`). Running `./install.sh` with no
+`FORCE_SUPABASE_*` vars produces the plain open-source build (no baked keys).
+
 ### Make it stop
 
 If you need to immediately quit the app and stop it from relaunching without a
@@ -119,7 +188,8 @@ directory printed by `swift build -c release --show-bin-path`.
 
 ```
 Sources/Force/      SwiftUI app source + bundled fonts
-landing/            Marketing site (static HTML/CSS/JS)
+web/                Next.js web editor + Supabase migration (optional cloud sync)
+landing/            Legacy static marketing site (superseded by web/)
 install.sh          Build + package + install the .app
 uninstall.sh        Remove the app, agent, and (optionally) data
 stop.sh             Quit now + disable auto-launch (no uninstall)

@@ -26,6 +26,7 @@ struct SettingsView: View {
                 VStack(alignment: .leading, spacing: Space.section) {
                     AppearanceSection()
                     ScheduleSection()
+                    SyncSection()
                     MessagesSection()
                     NonNegotiablesSection()
                     EmergencyStopSection()
@@ -36,6 +37,7 @@ struct SettingsView: View {
         }
         .frame(width: 760, height: 680)
         .background(Ink.base)
+        .onDisappear { Task { await RemoteSync.shared.pushIfDirty() } }
     }
 }
 
@@ -161,7 +163,7 @@ struct MessagesSection: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Space.lg) {
-            SectionHeader(kicker: "03 — WORDS", title: "Your contract & quote")
+            SectionHeader(kicker: "04 — WORDS", title: "Your contract & quote")
 
             editorField(
                 label: "DASHBOARD QUOTE",
@@ -212,7 +214,7 @@ struct NonNegotiablesSection: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Space.lg) {
-            SectionHeader(kicker: "04 — CHECKLIST", title: "Daily non-negotiables")
+            SectionHeader(kicker: "05 — CHECKLIST", title: "Daily non-negotiables")
 
             VStack(spacing: Space.sm) {
                 ForEach($settings.nonNegotiables) { $item in
@@ -255,6 +257,144 @@ struct NonNegotiablesSection: View {
     }
 }
 
+// MARK: - Sync (Supabase)
+
+struct SyncSection: View {
+    static let signupURL = URL(string: "https://force.clupai.com/signup")!
+
+    @EnvironmentObject var remote: RemoteSync
+    @State private var email = ""
+    @State private var password = ""
+    @State private var showConfig = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Space.lg) {
+            SectionHeader(kicker: "03 — SYNC", title: "Edit from anywhere")
+
+            Text("Sign in to the web editor's account to pull your contract, quotes, goals and reflection onto this Mac. Changes sync on launch.")
+                .font(Type.captionMD)
+                .foregroundStyle(Ink.mute)
+                .fixedSize(horizontal: false, vertical: true)
+
+            if !remote.isConfigured || showConfig {
+                VStack(spacing: Space.sm) {
+                    field("Supabase URL", text: $remote.baseURL, placeholder: "https://xxxx.supabase.co")
+                    field("Anon public key", text: $remote.anonKey, placeholder: "eyJ…")
+                }
+                .padding(Space.lg)
+                .background(Ink.containerLow, in: RoundedRectangle(cornerRadius: Radius.lg))
+            }
+
+            if remote.isConfigured {
+                if remote.isLoggedIn {
+                    loggedIn
+                } else {
+                    login
+                }
+            }
+
+            statusLine
+        }
+    }
+
+    @ViewBuilder private var login: some View {
+        VStack(spacing: Space.sm) {
+            field("Email", text: $email, placeholder: "you@example.com")
+            secureField("Password", text: $password)
+            HStack(spacing: Space.lg) {
+                Button("Log in") {
+                    Task { await remote.login(email: email, password: password); password = "" }
+                }
+                .buttonStyle(SecondaryPillStyle())
+
+                if !showConfig {
+                    Button("Edit connection") { showConfig = true }
+                        .buttonStyle(GhostTextStyle(color: Ink.mute))
+                }
+            }
+
+            HStack(spacing: Space.xs) {
+                Text("No account yet?")
+                    .font(Type.captionMD)
+                    .foregroundStyle(Ink.mute)
+                Link("Sign up at force.clupai.com ↗", destination: SyncSection.signupURL)
+                    .font(Type.captionMD)
+                    .foregroundStyle(Ink.ink)
+                Spacer(minLength: 0)
+            }
+            .padding(.top, Space.xxs)
+        }
+        .padding(Space.lg)
+        .background(Ink.containerLow, in: RoundedRectangle(cornerRadius: Radius.lg))
+    }
+
+    @ViewBuilder private var loggedIn: some View {
+        VStack(alignment: .leading, spacing: Space.md) {
+            Text("Signed in as \(remote.email ?? "—")")
+                .font(Type.bodyStrong)
+                .foregroundStyle(Ink.ink)
+            Text(remote.localDirty
+                 ? "You have local edits not yet synced. They'll push on Sync now or when you close Settings."
+                 : "Your contract and goals sync both ways. Quotes and reflection are edited on the web.")
+                .font(Type.captionMD)
+                .foregroundStyle(Ink.mute)
+                .fixedSize(horizontal: false, vertical: true)
+            HStack(spacing: Space.lg) {
+                Button("Sync now") { Task { await remote.syncNow() } }
+                    .buttonStyle(SecondaryPillStyle())
+                Button("Log out") { remote.logout() }
+                    .buttonStyle(GhostTextStyle(color: Ink.mute))
+                if !showConfig {
+                    Button("Edit connection") { showConfig = true }
+                        .buttonStyle(GhostTextStyle(color: Ink.mute))
+                }
+            }
+        }
+        .padding(Space.lg)
+        .background(Ink.containerLow, in: RoundedRectangle(cornerRadius: Radius.lg))
+    }
+
+    @ViewBuilder private var statusLine: some View {
+        switch remote.status {
+        case .syncing:
+            Text("Syncing…").font(Type.captionMD).foregroundStyle(Ink.mute)
+        case .synced(let date):
+            if date == .distantPast {
+                EmptyView()
+            } else {
+                Text("Last synced \(date.formatted(date: .omitted, time: .shortened))")
+                    .font(Type.captionMD).foregroundStyle(Ink.mute)
+            }
+        case .error(let msg):
+            Text(msg).font(Type.captionMD).foregroundStyle(Ink.ink)
+        case .needsConfig, .loggedOut:
+            EmptyView()
+        }
+    }
+
+    private func field(_ label: String, text: Binding<String>, placeholder: String) -> some View {
+        TextField(placeholder, text: text)
+            .textFieldStyle(.plain)
+            .font(Type.bodyMD)
+            .foregroundStyle(Ink.ink)
+            .padding(.horizontal, Space.md)
+            .frame(height: 44)
+            .background(Ink.bright, in: RoundedRectangle(cornerRadius: Radius.md))
+            .accessibilityLabel(label)
+    }
+
+    private func secureField(_ label: String, text: Binding<String>) -> some View {
+        SecureField(label, text: text)
+            .textFieldStyle(.plain)
+            .font(Type.bodyMD)
+            .foregroundStyle(Ink.ink)
+            .padding(.horizontal, Space.md)
+            .frame(height: 44)
+            .background(Ink.bright, in: RoundedRectangle(cornerRadius: Radius.md))
+            .accessibilityLabel(label)
+    }
+}
+
 // MARK: - Emergency stop
 
 /// Hard kill switch. Disables auto-launch and quits Force immediately,
@@ -265,7 +405,7 @@ struct EmergencyStopSection: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Space.lg) {
-            SectionHeader(kicker: "05 — EMERGENCY", title: "Stop Force")
+            SectionHeader(kicker: "06 — EMERGENCY", title: "Stop Force")
 
             Text("Turns off auto-launch and quits immediately, even before today's acknowledgement. Force will not reopen until you launch it again.")
                 .font(Type.captionMD)

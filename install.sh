@@ -9,6 +9,14 @@
 #   ./install.sh --no-open       Don't launch the app after installing
 #   ./install.sh --replace-others  Remove copies in other locations, no prompt
 #   ./install.sh --keep-others   Leave copies in other locations in place
+#   ./install.sh --package       Build a distributable .zip in ./dist (don't install)
+#
+# To ship a build that's pre-connected to your Supabase project (users only log
+# in, no key entry), set both env vars. Bake + install locally:
+#   FORCE_SUPABASE_URL=https://xxxx.supabase.co \
+#   FORCE_SUPABASE_ANON_KEY=sb_publishable_... ./install.sh
+# Bake + produce a shareable zip for people without Xcode:
+#   FORCE_SUPABASE_URL=... FORCE_SUPABASE_ANON_KEY=... ./install.sh --package
 #
 # Before installing, the script checks the common install locations (and any
 # it has installed to before) for an existing "Acknowledgement Force.app"
@@ -35,6 +43,7 @@ OPEN_AFTER=1
 USE_SUDO=""
 REPLACE_OTHERS=0
 KEEP_OTHERS=0
+PACKAGE=0
 RECORD="$HOME/Library/Application Support/$EXEC_NAME/install-locations"
 
 while [ $# -gt 0 ]; do
@@ -42,6 +51,7 @@ while [ $# -gt 0 ]; do
     --system) PREFIX="/Applications"; shift ;;
     --prefix) PREFIX="$2"; shift 2 ;;
     --no-open) OPEN_AFTER=0; shift ;;
+    --package) PACKAGE=1; shift ;;
     --replace-others) REPLACE_OTHERS=1; shift ;;
     --keep-others) KEEP_OTHERS=1; shift ;;
     -h|--help) grep '^#' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
@@ -69,6 +79,34 @@ case "$PREFIX" in
   *) [ -w "$PREFIX" ] || USE_SUDO="sudo" ;;
 esac
 
+# Optionally bake the Supabase connection into the binary so installed copies
+# work with just a login (no manual key entry). Set both env vars to enable:
+#   FORCE_SUPABASE_URL=https://xxxx.supabase.co \
+#   FORCE_SUPABASE_ANON_KEY=eyJ... ./install.sh
+# The anon key is the public key (protected by row-level security), safe to embed.
+CONFIG_SRC="$REPO_DIR/Sources/Force/SupabaseConfig.swift"
+CONFIG_BACKUP=""
+STAGE=""
+cleanup() {
+  [ -n "$CONFIG_BACKUP" ] && [ -f "$CONFIG_BACKUP" ] && mv -f "$CONFIG_BACKUP" "$CONFIG_SRC"
+  [ -n "$STAGE" ] && rm -rf "$STAGE"
+}
+trap cleanup EXIT
+
+if [ -n "${FORCE_SUPABASE_URL:-}" ] && [ -n "${FORCE_SUPABASE_ANON_KEY:-}" ]; then
+  echo "==> Baking Supabase connection into the build..."
+  CONFIG_BACKUP="$(mktemp)"
+  cp "$CONFIG_SRC" "$CONFIG_BACKUP"
+  # '|' is a safe delimiter: URLs and JWT anon keys never contain it.
+  sed -i '' \
+    -e "s|__FORCE_SUPABASE_URL__|${FORCE_SUPABASE_URL}|g" \
+    -e "s|__FORCE_SUPABASE_ANON_KEY__|${FORCE_SUPABASE_ANON_KEY}|g" \
+    "$CONFIG_SRC"
+elif [ -n "${FORCE_SUPABASE_URL:-}" ] || [ -n "${FORCE_SUPABASE_ANON_KEY:-}" ]; then
+  echo "Warning: set BOTH FORCE_SUPABASE_URL and FORCE_SUPABASE_ANON_KEY to bake" >&2
+  echo "         credentials. Building without baked config." >&2
+fi
+
 echo "==> Building Acknowledgement Force $VERSION (release)..."
 swift build -c release --package-path "$REPO_DIR"
 BIN_DIR="$(swift build -c release --package-path "$REPO_DIR" --show-bin-path)"
@@ -79,7 +117,6 @@ BUNDLE_PATH="$BIN_DIR/$RESOURCE_BUNDLE"
 
 echo "==> Assembling app bundle..."
 STAGE="$(mktemp -d)"
-trap 'rm -rf "$STAGE"' EXIT
 APP="$STAGE/$APP_NAME.app"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 
@@ -130,6 +167,28 @@ PLIST
 if command -v codesign >/dev/null 2>&1; then
   codesign --force --deep --sign - --options runtime "$APP" >/dev/null 2>&1 || \
     echo "    (warning: ad-hoc code signing failed; app should still run)"
+fi
+
+# --package: emit a distributable zip instead of installing locally. The
+# recipient unzips and drags the .app to /Applications — no Swift, no keys.
+if [ "$PACKAGE" -eq 1 ]; then
+  DIST="$REPO_DIR/dist"
+  mkdir -p "$DIST"
+  rm -rf "$DIST/$APP_NAME.app"
+  cp -R "$APP" "$DIST/$APP_NAME.app"
+  ZIP="$DIST/Acknowledgement-Force-$VERSION.zip"
+  rm -f "$ZIP"
+  # ditto preserves the bundle structure, symlinks, and code signature.
+  ditto -c -k --keepParent "$DIST/$APP_NAME.app" "$ZIP"
+  echo "==> Packaged: $ZIP"
+  if [ -z "${FORCE_SUPABASE_URL:-}" ] || [ -z "${FORCE_SUPABASE_ANON_KEY:-}" ]; then
+    echo "    NOTE: built WITHOUT baked keys — set FORCE_SUPABASE_URL and"
+    echo "    FORCE_SUPABASE_ANON_KEY to embed them so recipients only log in."
+  fi
+  echo "    This build is ad-hoc signed, not notarized: on first open the"
+  echo "    recipient must right-click the app and choose Open (or run"
+  echo "    'xattr -dr com.apple.quarantine \"<app>\"')."
+  exit 0
 fi
 
 DEST="$PREFIX/$APP_NAME.app"
