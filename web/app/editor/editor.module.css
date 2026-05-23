@@ -338,3 +338,28 @@
 .linkBtn:hover {
   color: var(--ink);
 }
+
+.themeBtn {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--outline-soft);
+  background: var(--container-low);
+  color: var(--mute);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: background 0.15s var(--ease-out), color 0.15s var(--ease-out),
+    transform 0.3s var(--ease-spring);
+}
+
+.themeBtn:hover {
+  background: var(--container);
+  color: var(--ink);
+  transform: translateY(-1px);
+}
+
+.themeBtn:active {
+  transform: scale(0.9);
+}
