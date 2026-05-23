@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { type Content, type Goal, slugId } from "@/lib/content";
@@ -121,6 +122,9 @@ export default function Editor({
               </svg>
             )}
           </button>
+          <Link href="/settings/api-keys" className={styles.linkBtn}>
+            Settings
+          </Link>
           <span className={styles.email}>{email}</span>
           <button className={styles.linkBtn} onClick={logout}>
             Log out

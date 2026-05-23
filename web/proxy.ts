@@ -36,7 +36,7 @@ export async function proxy(request: NextRequest) {
 
   const path = request.nextUrl.pathname;
 
-  if (path.startsWith("/editor") && !user) {
+  if ((path.startsWith("/editor") || path.startsWith("/settings")) && !user) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
   if ((path === "/login" || path === "/signup") && user) {
@@ -48,7 +48,8 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Run on everything except static assets and the public/assets folder.
-    "/((?!_next/static|_next/image|favicon.ico|assets|.*\\.(?:png|jpg|jpeg|gif|svg|ico|mp4|webm)$).*)",
+    // Run on everything except static assets and the JSON-only public API
+    // (the API uses its own bearer-token auth, no cookie refresh needed).
+    "/((?!api/|_next/static|_next/image|favicon.ico|assets|.*\\.(?:png|jpg|jpeg|gif|svg|ico|mp4|webm)$).*)",
   ],
 };
