@@ -121,8 +121,10 @@ APP="$STAGE/$APP_NAME.app"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 
 cp "$BIN_PATH" "$APP/Contents/MacOS/$EXEC_NAME"
-# Bundle.module resolves against Bundle.main.resourceURL (Contents/Resources).
-[ -d "$BUNDLE_PATH" ] && cp -R "$BUNDLE_PATH" "$APP/Contents/Resources/"
+# Bundle.module resolves against Bundle.main.bundleURL (the .app root), so the
+# resource bundle must live at Acknowledgement Force.app/Force_Force.bundle —
+# NOT inside Contents/Resources.
+[ -d "$BUNDLE_PATH" ] && cp -R "$BUNDLE_PATH" "$APP/"
 
 # Build a multi-resolution .icns from the source PNG.
 ICON_REF=""
