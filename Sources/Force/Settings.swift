@@ -100,7 +100,10 @@ final class SettingsStore: ObservableObject {
     }
 
     @Published var motivation: String {
-        didSet { defaults.set(motivation, forKey: Keys.motivation) }
+        didSet {
+            defaults.set(motivation, forKey: Keys.motivation)
+            RemoteSync.shared.markLocalEdit()
+        }
     }
 
     @Published var contractText: String {
