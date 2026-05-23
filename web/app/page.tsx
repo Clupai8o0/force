@@ -117,7 +117,7 @@ export default function Home() {
           </div>
           <div className="hero-content">
             <span className="badge">
-              <span className="dot"></span>Free &amp; Open Source · macOS
+              <span className="dot"></span>Free &amp; Open Source · macOS + Web
             </span>
             <h1 className="display">
               <span className="line">
@@ -185,7 +185,8 @@ export default function Home() {
                 Acknowledgement Force gates your Mac behind your own words. The
                 window won&apos;t close until you&apos;ve read today&apos;s
                 contract, ticked the box, and named the one thing that matters
-                most.
+                most. Edit your contract, quotes, goals, and reflection from the
+                web — it lands on your Mac on launch.
               </p>
             </div>
             <div className="illo reveal">
@@ -421,16 +422,27 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Privacy */}
+            {/* Sync */}
             <div className="cell col-3 reveal">
               <div className="cell-pad">
-                <p className="kicker">Yours alone</p>
-                <h3>Local-first, synced when you want.</h3>
-                <p>
-                  Your contract lives on your Mac. Create a free account to edit
-                  it from anywhere and sync it back — no trackers, source always
-                  open.
-                </p>
+                <p className="kicker">Edit from anywhere</p>
+                <h3>Four pieces, kept in sync.</h3>
+                <div className="hist-row">
+                  <span className="d">Contract</span>
+                  <span className="a">Markdown — your rules, your words.</span>
+                </div>
+                <div className="hist-row">
+                  <span className="d">Quotes</span>
+                  <span className="a">A rotating reminder of why you do this.</span>
+                </div>
+                <div className="hist-row">
+                  <span className="d">Goals</span>
+                  <span className="a">Daily targets that reset each period.</span>
+                </div>
+                <div className="hist-row">
+                  <span className="d">Reflect</span>
+                  <span className="a">End-of-day note, kept just for you.</span>
+                </div>
               </div>
             </div>
           </div>
@@ -548,6 +560,46 @@ export default function Home() {
                 Confirm, and your Mac is yours. Your action and streak are logged
                 locally, and the dashboard greets you.
               </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ============ TWO WAYS ============ */}
+        <section className="section-pad wrap">
+          <div className="section-head center reveal">
+            <span className="tick"></span>
+            <p className="eyebrow">Two ways to run it</p>
+            <h2 className="display">Hosted, or your own backend.</h2>
+            <p>Same Mac app. Pick the plumbing that fits.</p>
+          </div>
+          <div className="paths">
+            <div className="path reveal">
+              <p className="kicker">For non-technical users</p>
+              <h3>Hosted — zero setup</h3>
+              <p>
+                Download the prebuilt app, create an account at
+                force.clupai.com, log in. The build is pre-wired to the hosted
+                backend, so editing on the web syncs to your Mac on launch.
+              </p>
+              <div className="path-cta">
+                <Link className="btn btn-ghost btn-sm" href="/signup">
+                  Create your account →
+                </Link>
+              </div>
+            </div>
+            <div className="path reveal">
+              <p className="kicker">For developers</p>
+              <h3>Self-host — your data, your keys</h3>
+              <p>
+                Point the app at your own Supabase project and own every byte.
+                Or skip sync entirely and run it fully local — no account, no
+                network. Same source, your infrastructure.
+              </p>
+              <div className="path-cta">
+                <a className="btn btn-ghost btn-sm" href={GH} target="_blank" rel="noopener" data-gh>
+                  Bring your own Supabase →
+                </a>
+              </div>
             </div>
           </div>
         </section>
