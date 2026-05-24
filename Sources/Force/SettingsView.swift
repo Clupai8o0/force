@@ -24,6 +24,7 @@ struct SettingsView: View {
 
             ScrollView {
                 VStack(alignment: .leading, spacing: Space.section) {
+                    ProfileSection()
                     AppearanceSection()
                     ScheduleSection()
                     SyncSection()
@@ -55,6 +56,35 @@ struct SectionHeader: View {
             Text(title)
                 .font(Type.headingLG)
                 .foregroundStyle(Ink.ink)
+        }
+    }
+}
+
+// MARK: - Profile
+
+struct ProfileSection: View {
+    @EnvironmentObject var settings: SettingsStore
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Space.lg) {
+            SectionHeader(kicker: "00 — PROFILE", title: "Your name")
+
+            VStack(alignment: .leading, spacing: Space.sm) {
+                Text("DISPLAY NAME")
+                    .font(Type.captionSM)
+                    .tracking(1.0)
+                    .foregroundStyle(Ink.mute)
+                Text("Used in your contract wherever {{NAME}} appears.")
+                    .font(Type.captionMD)
+                    .foregroundStyle(Ink.mute)
+                TextField("e.g. Jane Smith", text: $settings.displayName)
+                    .textFieldStyle(.plain)
+                    .font(Type.bodyMD)
+                    .foregroundStyle(Ink.ink)
+                    .padding(.horizontal, Space.md)
+                    .frame(height: 44)
+                    .background(Ink.containerHigh, in: RoundedRectangle(cornerRadius: Radius.md))
+            }
         }
     }
 }

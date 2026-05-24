@@ -32,6 +32,9 @@ export default async function SettingsLayout({
 
       <div className={styles.layout}>
         <nav className={styles.nav} aria-label="Settings sections">
+          <Link href="/settings/profile" className={styles.navItem}>
+            Profile
+          </Link>
           <Link href="/settings/api-keys" className={styles.navItem}>
             API keys
           </Link>

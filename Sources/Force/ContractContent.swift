@@ -30,8 +30,10 @@ enum Contract {
     ///   `# / ## / ###` headings · `---`/`***`/`___` rule · `1.` numbered ·
     ///   `- `/`* ` bullet · `[ ]`/`- [ ]`/`- [x]` checkbox · `> ` blockquote ·
     ///   `**bold**` inline · everything else is a paragraph.
-    static func blocks(from markdown: String, date: String) -> [ContractBlock] {
-        let text = markdown.replacingOccurrences(of: "{{DATE}}", with: date)
+    static func blocks(from markdown: String, date: String, name: String = "") -> [ContractBlock] {
+        let text = markdown
+            .replacingOccurrences(of: "{{DATE}}", with: date)
+            .replacingOccurrences(of: "{{NAME}}", with: name)
         var blocks: [ContractBlock] = []
 
         for raw in text.components(separatedBy: "\n") {
@@ -96,10 +98,10 @@ enum Contract {
     static let defaultMarkdown = """
     # Acknowledgement Force Daily Contract
     **Date:** {{DATE}}
-    **For:** Samridh Limbu
+    **For:** {{NAME}}
     ---
     ## I. Who I Am
-    I am **Samridh Limbu**. I am building a high-leverage tech career in Australia while securing PR as early as possible. My success depends on **sustained performance**, not bursts of effort.
+    I am **{{NAME}}**. I am building a high-leverage tech career in Australia while securing PR as early as possible. My success depends on **sustained performance**, not bursts of effort.
     ---
     ## II. Non-Negotiable Rules
     1. **Sleep 11pm-7am.** Without 7-8 hours, everything else collapses.
@@ -153,6 +155,6 @@ enum Contract {
     3. Structured journaling.
     4. Reassess with Claude.
     ---
-    **I am Samridh Limbu. I commit to this contract for today.**
+    **I am {{NAME}}. I commit to this contract for today.**
     """
 }

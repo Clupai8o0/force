@@ -200,7 +200,7 @@ struct AppView: View {
                     ScrollView(.vertical, showsIndicators: false) {
                         VStack(alignment: .leading, spacing: Space.sm) {
                             ForEach(
-                                Array(Contract.blocks(from: settings.contractText, date: AppDate.longToday()).enumerated()),
+                                Array(Contract.blocks(from: settings.contractText, date: AppDate.longToday(), name: settings.displayName).enumerated()),
                                 id: \.offset
                             ) { _, block in
                                 contractBlockView(block)

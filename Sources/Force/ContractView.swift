@@ -62,7 +62,7 @@ struct ContractView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: Space.lg) {
                     header
-                    ForEach(Array(Contract.blocks(from: settings.contractText, date: AppDate.longToday()).enumerated()), id: \.offset) { _, block in
+                    ForEach(Array(Contract.blocks(from: settings.contractText, date: AppDate.longToday(), name: settings.displayName).enumerated()), id: \.offset) { _, block in
                         blockView(block)
                     }
                     // Bottom sentinel detects scroll completion.

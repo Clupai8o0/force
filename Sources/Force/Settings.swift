@@ -82,6 +82,7 @@ final class SettingsStore: ObservableObject {
         static let nonNegotiables = "af-nonnegotiables-v1"
         static let onboarded = "af-onboarded-v1"
         static let reflection = "af-reflection-v1"
+        static let displayName = "af-display-name-v1"
     }
 
     @Published var frequency: Frequency {
@@ -131,10 +132,15 @@ final class SettingsStore: ObservableObject {
         didSet { defaults.set(hasOnboarded, forKey: Keys.onboarded) }
     }
 
+    @Published var displayName: String {
+        didSet { defaults.set(displayName, forKey: Keys.displayName) }
+    }
+
     private init() {
         frequency = defaults.string(forKey: Keys.frequency).flatMap(Frequency.init(rawValue:)) ?? .daily
         autoLaunch = defaults.bool(forKey: Keys.autoLaunch)
         hasOnboarded = defaults.bool(forKey: Keys.onboarded)
+        displayName = defaults.string(forKey: Keys.displayName) ?? ""
         motivation = defaults.string(forKey: Keys.motivation) ?? DefaultCopy.motivation
         contractText = defaults.string(forKey: Keys.contractText) ?? Contract.defaultMarkdown
         reflection = defaults.string(forKey: Keys.reflection) ?? ""
