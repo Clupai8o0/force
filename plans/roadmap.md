@@ -199,6 +199,36 @@ Plus:
 
 ---
 
+## Track 3 — Force Guide (optional, future)
+
+**Goal:** an in-app chatbot that knows your contract and can answer questions to help you stay aligned.
+
+### Concept
+
+A conversational assistant embedded in the web (and eventually Android) app. The user can ask things like "am I staying true to my goals?", "what does my contract say about X?", or "help me think through this decision." The guide has full read access to the user's contract, quotes, goals, and reflection — no manual copy-paste.
+
+### Implementation sketch
+
+- **API route:** `POST /api/v1/guide/chat` — accepts `{ messages: Message[] }`, streams a response. Server-side, it prefixes the conversation with a system prompt that injects the user's current contract, goals, and quotes.
+- **Model:** Claude (Anthropic SDK), streaming via SSE. System prompt is built fresh per request from the user's `contents` row so it always reflects the latest contract.
+- **UI:** a chat drawer or dedicated `/guide` route. Minimal — message list + input. No history persistence required in v1 (stateless per session).
+- **Auth:** same session cookie as the rest of the web app. No new API-key scope needed for this feature.
+
+### Scope boundaries (keep it simple)
+
+- Read-only access to user data inside the system prompt — the guide does not write back to the contract
+- No persistent chat history in the database (v1)
+- No tool calls or agentic behavior — pure conversational assistant
+
+### Phasing
+
+1. Backend: `/api/v1/guide/chat` route with streaming, contract injection
+2. Web UI: chat panel (drawer or page), basic message rendering + markdown support
+3. Android: same endpoint, native chat UI in a new screen
+4. *(later)* Persistent history, context-aware suggestions, proactive nudges
+
+---
+
 ## Suggested execution order across both tracks
 
 1. Track 1 — step E.1 (migration + middleware + one `/api/v1/contract` route). Proves the API-key pattern, unblocks the rest of Track 1.
